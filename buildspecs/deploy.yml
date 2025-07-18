@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  variables:
+    FUNCTION_NAME: "cicd-demo"
+    ZIP_FILE: "lambda.zip"
+
 phases:
   install:
     runtime-versions:
@@ -7,16 +12,10 @@ phases:
     commands:
       - echo "Install extra packages"
       - yum install -y zip
-  pre_build:
-    commands:
-      - export FUNCTION_NAME="cicd-demo"
-      - export ZIP_FILE=lambda.zip
   build:
     commands:
       - echo "preparing zip archive"
       - zip -r $ZIP_FILE .
       - echo "Deploying lambda function"
-      - aws lambda update-function-code \
-       --function-name $FUNCTION_NAME \
-       --zip-file fileb://$ZIP_FILE
+      - aws lambda update-function-code --function-name ${FUNCTION_NAME} --zip-file fileb://${ZIP_FILE}
 
